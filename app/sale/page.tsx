@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import React from "react";
 
+
 // Voeg hier je sale producten toe (voorbeeld)
 const saleProducts = [
   {

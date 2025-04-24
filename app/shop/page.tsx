@@ -2,27 +2,99 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
-import React, { useState } from "react";
-import { products } from "@/data/products";
-
-const categories = [
-  "Alles",
-  ...Array.from(new Set(products.map((p) => p.category))),
-];
+import React, { useState, useEffect, useRef } from "react";
+import { Product } from "@/data/products";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Shop() {
   const { addToCart } = useCart();
-  const [selectedCategory, setSelectedCategory] = useState("Alles");
-  // Houd per product bij of deze wordt gehovert
   const [hovered, setHovered] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [showSort, setShowSort] = useState(false);
+  const [showCat, setShowCat] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+  const catRef = useRef<HTMLDivElement>(null);
+
+  // Sluit dropdowns bij klik buiten
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) setShowSort(false);
+      if (catRef.current && !catRef.current.contains(e.target as Node)) setShowCat(false);
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then((data) => {
+        console.log("Producten uit database:", data);
+        setProducts(data);
+      });
+  }, []);
+
+  // Categorieën ophalen voor bovenaan de shop pagina
+  const categories = [
+    "Alles",
+    ...Array.from(new Set(products.map((p) => p.category))),
+  ];
+
+  // Filter op categorie uit querystring
+  const selectedCategory = searchParams.get("category") || "Alles";
+  const sort = searchParams.get("sort") || "naam-asc";
 
   let filteredProducts = products;
   if (selectedCategory !== "Alles") {
     filteredProducts = filteredProducts.filter((p) => p.category === selectedCategory);
   }
 
+  // Sorteren op naam of prijs
+  if (sort === "naam-asc") {
+    filteredProducts = [...filteredProducts].sort((a, b) => a.display_name.localeCompare(b.display_name));
+  } else if (sort === "naam-desc") {
+    filteredProducts = [...filteredProducts].sort((a, b) => b.display_name.localeCompare(a.display_name));
+  } else if (sort === "prijs-asc") {
+    filteredProducts = [...filteredProducts].sort((a, b) => Number(a.price) - Number(b.price));
+  } else if (sort === "prijs-desc") {
+    filteredProducts = [...filteredProducts].sort((a, b) => Number(b.price) - Number(a.price));
+  }
+
+  // Handler voor sorteren
+  function handleSortChange(val: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sort", val);
+    router.push(`/shop?${params.toString()}`);
+    setShowSort(false);
+  }
+  function handleCategoryChange(val: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val === "Alles") {
+      params.delete("category");
+    } else {
+      params.set("category", val);
+    }
+    router.push(`/shop?${params.toString()}`);
+    setShowCat(false);
+  }
+
+  const breadcrumb = [
+    { name: "Home", href: "/" },
+    { name: "Shop", href: "/shop" },
+  ];
+  if (selectedCategory !== "Alles") {
+    breadcrumb.push({
+      name: selectedCategory,
+      href: `/shop?category=${encodeURIComponent(selectedCategory)}`,
+    });
+  }
+
   return (
     <main className="min-h-screen bg-[#F8F8F8] pb-16">
+      
       {/* Hero / Banner */}
       <section className="bg-[#FFF275] py-12 px-4 mb-10 rounded-b-3xl shadow-md">
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
@@ -33,52 +105,102 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* Categorieën */}
-      <div className="flex flex-wrap gap-3 justify-center mb-6">
-        {categories.map((cat) => (
+      {/* Filterbar */}
+      <div className="max-w-7xl mx-auto mb-8 px-2 flex flex-wrap items-center gap-4 pt-6">
+        {/* Sorteer dropdown */}
+        <div className="relative" ref={sortRef}>
           <button
-            key={cat}
-            className={`px-4 py-2 rounded-full font-bold border transition ${
-              selectedCategory === cat
-                ? "bg-[#3B5FFF] text-white border-[#3B5FFF]"
-                : "bg-[#F8F8F8] text-[#3B5FFF] border-[#3B5FFF] hover:bg-[#FFF275]"
-            }`}
-            onClick={() => {
-              setSelectedCategory(cat);
-            }}
+            className="px-4 py-2 rounded-full font-bold border border-[#3B5FFF] bg-white text-[#3B5FFF] flex items-center gap-2 min-w-[120px]"
+            onClick={() => setShowSort((v) => !v)}
+            type="button"
           >
-            {cat}
+            Sorteer op
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="#3B5FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
-        ))}
+          {showSort && (
+            <div className="absolute left-0 mt-2 bg-white text-[#3B5FFF] rounded-lg shadow-lg py-2 min-w-[160px] z-30">
+              <button className={`block w-full text-left px-4 py-2 hover:bg-[#FFF275] hover:text-[#FF5CA2] transition ${sort==="naam-asc"?"font-bold":""}`} onClick={() => handleSortChange("naam-asc")}>Naam A-Z</button>
+              <button className={`block w-full text-left px-4 py-2 hover:bg-[#FFF275] hover:text-[#FF5CA2] transition ${sort==="naam-desc"?"font-bold":""}`} onClick={() => handleSortChange("naam-desc")}>Naam Z-A</button>
+              <button className={`block w-full text-left px-4 py-2 hover:bg-[#FFF275] hover:text-[#FF5CA2] transition ${sort==="prijs-asc"?"font-bold":""}`} onClick={() => handleSortChange("prijs-asc")}>Prijs laag-hoog</button>
+              <button className={`block w-full text-left px-4 py-2 hover:bg-[#FFF275] hover:text-[#FF5CA2] transition ${sort==="prijs-desc"?"font-bold":""}`} onClick={() => handleSortChange("prijs-desc")}>Prijs hoog-laag</button>
+            </div>
+          )}
+        </div>
+        {/* Categorie dropdown */}
+        <div className="relative" ref={catRef}>
+          <button
+            className="px-4 py-2 rounded-full font-bold border border-[#3B5FFF] bg-white text-[#3B5FFF] flex items-center gap-2 min-w-[120px]"
+            onClick={() => setShowCat((v) => !v)}
+            type="button"
+          >
+            Categorie
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="#3B5FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+          {showCat && (
+            <div className="absolute left-0 mt-2 bg-white text-[#3B5FFF] rounded-lg shadow-lg py-2 min-w-[160px] z-30 max-h-60 overflow-auto">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  className={`block w-full text-left px-4 py-2 hover:bg-[#FFF275] hover:text-[#FF5CA2] transition ${selectedCategory===cat?"font-bold":""}`}
+                  onClick={() => handleCategoryChange(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <span className="ml-auto text-[#3B5FFF] font-bold text-base">
+          ({filteredProducts.length}) resultaten
+        </span>
       </div>
+
+      {/* Breadcrumb */}
+      <nav className="max-w-7xl mx-auto mb-6 px-2 text-sm" aria-label="Breadcrumb">
+        <ol className="flex items-center gap-2 text-[#3B5FFF]">
+          {breadcrumb.map((b, idx) => (
+            <React.Fragment key={b.href}>
+              <li>
+                <Link href={b.href} className={idx === breadcrumb.length - 1 ? "text-[#FF5CA2] font-semibold" : "hover:underline"}>
+                  {b.name}
+                </Link>
+              </li>
+              {idx < breadcrumb.length - 1 && (
+                <span className="mx-1 text-gray-400">/</span>
+              )}
+            </React.Fragment>
+          ))}
+        </ol>
+      </nav>
 
       {/* Producten grid */}
       <section className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-2xl shadow-lg flex flex-col items-center p-6 text-center border-2 border-[#FFF275] hover:shadow-2xl transition"
-              onMouseEnter={() => setHovered(product.id)}
-              onMouseLeave={() => setHovered(null)}
-            >
-              <div className="w-full flex justify-center mb-4">
-                <div className="bg-[#F8F8F8] rounded-xl p-4 flex items-center justify-center shadow-inner relative h-[160px] w-[160px]">
-                  {/* Beide images gestapeld, met fade animatie */}
-                  <Image
-                    src={product.images[0]}
-                    alt={product.name}
-                    width={160}
-                    height={160}
-                    className={`object-contain absolute inset-0 transition-opacity duration-300 ${
-                      hovered === product.id ? "opacity-0" : "opacity-100"
-                    }`}
-                    draggable={false}
-                  />
-                  {product.images[1] && (
+          {filteredProducts.map((product) => {
+            const img1 = `/products/${product.category.toLowerCase()}/${product.name}-1.png`;
+            const img2 = `/products/${product.category.toLowerCase()}/${product.name}-2.png`;
+            return (
+              <div
+                key={product.id}
+                className="bg-white rounded-2xl shadow-lg flex flex-col items-center p-6 text-center border-2 border-[#FFF275] hover:shadow-2xl transition"
+                onMouseEnter={() => setHovered(product.id)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                <div className="w-full flex justify-center mb-4">
+                  <div className="bg-[#F8F8F8] rounded-xl p-4 flex items-center justify-center shadow-inner relative h-[160px] w-[160px]">
                     <Image
-                      src={product.images[1]}
-                      alt={product.name + " extra"}
+                      src={img1}
+                      alt={product.display_name}
+                      width={160}
+                      height={160}
+                      className={`object-contain absolute inset-0 transition-opacity duration-300 ${
+                        hovered === product.id ? "opacity-0" : "opacity-100"
+                      }`}
+                      draggable={false}
+                    />
+                    <Image
+                      src={img2}
+                      alt={product.display_name + " extra"}
                       width={160}
                       height={160}
                       className={`object-contain absolute inset-0 transition-opacity duration-300 ${
@@ -86,28 +208,30 @@ export default function Shop() {
                       }`}
                       draggable={false}
                     />
-                  )}
+                  </div>
+                </div>
+                <h2 className="font-luckiest-guy text-2xl text-[#3B5FFF] mb-1">{product.display_name}</h2>
+                <p className="text-gray-600 text-sm mb-2">{product.description}</p>
+                <div className="text-[#FF5CA2] font-bold text-xl mb-4">
+                  €{Number(product.price).toFixed(2)}
+                </div>
+                <div className="flex gap-3 mt-auto">
+                  <button
+                    className="bg-[#3B5FFF] hover:bg-[#2e4ce6] text-white font-poppins font-bold py-2 px-4 rounded-lg transition-all shadow"
+                    onClick={() => addToCart({ ...product, quantity: 1 })}
+                  >
+                    Voeg toe aan winkelwagen
+                  </button>
+                  <Link
+                    href={`/shop/${product.id}`}
+                    className="bg-[#FFF275] hover:bg-[#ffe95c] text-[#3B5FFF] font-poppins font-bold py-2 px-4 rounded-lg transition-all shadow border border-[#3B5FFF]"
+                  >
+                    Bekijk product
+                  </Link>
                 </div>
               </div>
-              <h2 className="font-luckiest-guy text-2xl text-[#3B5FFF] mb-1">{product.name}</h2>
-              <p className="text-gray-600 text-sm mb-2">{product.description}</p>
-              <div className="text-[#FF5CA2] font-bold text-xl mb-4">€{product.price.toFixed(2)}</div>
-              <div className="flex gap-3 mt-auto">
-                <button
-                  className="bg-[#3B5FFF] hover:bg-[#2e4ce6] text-white font-poppins font-bold py-2 px-4 rounded-lg transition-all shadow"
-                  onClick={() => addToCart({ ...product, quantity: 1 })}
-                >
-                  Voeg toe aan winkelwagen
-                </button>
-                <Link
-                  href={`/shop/${product.id}`}
-                  className="bg-[#FFF275] hover:bg-[#ffe95c] text-[#3B5FFF] font-poppins font-bold py-2 px-4 rounded-lg transition-all shadow border border-[#3B5FFF]"
-                >
-                  Bekijk product
-                </Link>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         {filteredProducts.length === 0 && (
           <div className="text-center text-gray-400 mt-10">Geen producten gevonden in deze categorie.</div>

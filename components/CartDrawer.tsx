@@ -1,14 +1,17 @@
 "use client";
 import React, { useRef, useEffect } from "react";
 import { useCart } from "./CartContext";
+import { loadStripe } from "@stripe/stripe-js";
 
 type Props = {
   open: boolean;
   onClose: () => void;
 };
 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
 const CartDrawer: React.FC<Props> = ({ open, onClose }) => {
-  const { items, removeFromCart, clearCart } = useCart();
+  const { items, removeFromCart, clearCart, addToCart } = useCart();
   const drawerRef = useRef<HTMLDivElement>(null);
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -26,6 +29,39 @@ const CartDrawer: React.FC<Props> = ({ open, onClose }) => {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open, onClose]);
+
+  // Stripe checkout handler
+  const handleCheckout = async () => {
+    const stripe = await stripePromise;
+    if (!stripe) return;
+
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items }),
+    });
+    const data = await res.json();
+    if (data.sessionId) {
+      stripe.redirectToCheckout({ sessionId: data.sessionId });
+    }
+  };
+
+  // Dynamisch image path voor elk item
+  const getImage = (item: any) => {
+    if (item.category && item.name) {
+      return `/products/${item.category.toLowerCase()}/${item.name}-1.png`;
+    }
+    return item.image || "";
+  };
+
+  // Helper om quantity direct te zetten
+  const setQuantity = (id: string, quantity: number) => {
+    if (quantity < 1) return;
+    const item = items.find((i) => i.id === id);
+    if (!item) return;
+    removeFromCart(id);
+    addToCart({ ...item, quantity });
+  };
 
   return (
     <>
@@ -59,42 +95,49 @@ const CartDrawer: React.FC<Props> = ({ open, onClose }) => {
             </div>
           ) : (
             <ul className="space-y-4">
-              {items.map((item) => (
-                <li key={item.id} className="flex items-center gap-3 bg-[#F8F8F8] rounded-lg p-3 shadow-sm">
-                  {item.image && (
+              {[...items]
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((item) => (
+                  <li key={item.id} className="flex items-center gap-3 bg-[#F8F8F8] rounded-lg p-3 shadow-sm">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={getImage(item)}
+                      alt={item.display_name || item.name}
                       className="w-14 h-14 object-contain rounded"
                     />
-                  )}
-                  <div className="flex-1 text-left">
-                    <div className="font-semibold text-[#3B5FFF]">{item.name}</div>
-                    <div className="text-xs text-gray-500 mb-1">
-                      €{item.price.toFixed(2)} per stuk
+                    <div className="flex-1 text-left">
+                      <div className="font-semibold text-[#3B5FFF]">{item.display_name || item.name}</div>
+                      <div className="text-xs text-gray-500 mb-1">
+                        €{Number(item.price).toFixed(2)} per stuk
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="px-2 py-1 rounded bg-[#FF5CA2] text-white font-bold text-lg disabled:opacity-50"
+                          onClick={() => setQuantity(item.id, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                          aria-label="Minder"
+                        >
+                          −
+                        </button>
+                        <span className="w-8 text-center rounded bg-[#FFF275] text-[#3B5FFF] font-bold border-0 px-2 py-1">
+                          {item.quantity}
+                        </span>
+                        <button
+                          className="px-2 py-1 rounded bg-[#3B5FFF] text-white font-bold text-lg"
+                          onClick={() => setQuantity(item.id, item.quantity + 1)}
+                          aria-label="Meer"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="px-2 py-1 rounded bg-[#FF5CA2] text-white font-bold text-lg disabled:opacity-50"
-                        onClick={() => removeFromCart(item.id)}
-                        aria-label="Verwijder"
-                      >
-                        −
-                      </button>
-                      <span className="w-8 text-center rounded bg-[#FFF275] text-[#3B5FFF] font-bold border-0 px-2 py-1">
-                        {item.quantity}
-                      </span>
-                      <button
-                        className="px-2 py-1 rounded bg-[#3B5FFF] text-white font-bold text-lg"
-                        onClick={() => removeFromCart(item.id)}
-                        aria-label="Meer"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              ))}
+                    <button
+                      className="text-xs text-red-500 hover:underline"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      Verwijder
+                    </button>
+                  </li>
+                ))}
             </ul>
           )}
         </div>
@@ -112,6 +155,7 @@ const CartDrawer: React.FC<Props> = ({ open, onClose }) => {
             </button>
             <button
               className="bg-[#3B5FFF] hover:bg-[#2e4ce6] text-white w-full py-2 rounded-lg font-bold transition"
+              onClick={handleCheckout}
             >
               Betalen
             </button>
