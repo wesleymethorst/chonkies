@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Luckiest_Guy, Poppins } from "next/font/google";
 import "./globals.css";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,6 +12,22 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Luckiest Guy font toevoegen
+const luckiestGuy = Luckiest_Guy({
+  variable: "--font-luckiest-guy",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+// Poppins font toevoegen
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +43,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${luckiestGuy.variable} ${poppins.variable} antialiased`}
       >
+        <Header title="Chonkies" />
         {children}
+        <Footer />
       </body>
     </html>
   );
