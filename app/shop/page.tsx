@@ -183,7 +183,7 @@ export default function Shop() {
               <div
                 key={product.id}
                 className="bg-white rounded-2xl shadow-lg flex flex-col items-center p-6 text-center border-2 border-[#FFF275] hover:shadow-2xl transition"
-                onMouseEnter={() => setHovered(product.id)}
+                onMouseEnter={() => setHovered(String(product.id))}
                 onMouseLeave={() => setHovered(null)}
               >
                 <div className="w-full flex justify-center mb-4">
