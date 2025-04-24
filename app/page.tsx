@@ -64,7 +64,7 @@ export default function Home() {
           <div className="bg-white rounded-2xl shadow-lg flex flex-col items-center p-6 text-center border-2 border-[#FFF275] hover:shadow-2xl transition">
             <div className="w-full flex justify-center mb-4">
               <div className="bg-[#F8F8F8] rounded-xl p-4 flex items-center justify-center shadow-inner">
-                <Image src="/products/marvel/captainamerica.png" alt="Captain America" width={160} height={160} className="object-contain" />
+                <Image src="/products/marvel/captain-america-1.png" alt="Captain America" width={160} height={160} className="object-contain" />
               </div>
             </div>
             <h3 className="font-luckiest-guy text-2xl text-[#3B5FFF] mb-1">Captain America</h3>
@@ -79,7 +79,7 @@ export default function Home() {
           <div className="bg-white rounded-2xl shadow-lg flex flex-col items-center p-6 text-center border-2 border-[#FFF275] hover:shadow-2xl transition">
             <div className="w-full flex justify-center mb-4">
               <div className="bg-[#F8F8F8] rounded-xl p-4 flex items-center justify-center shadow-inner">
-                <Image src="/products/horror/terrifier.png" alt="Terrifier" width={160} height={160} className="object-contain" />
+                <Image src="/products/horror/art-the-clown-bloody-1.png" alt="Terrifier" width={160} height={160} className="object-contain" />
               </div>
             </div>
             <h3 className="font-luckiest-guy text-2xl text-[#3B5FFF] mb-1">Terrifier</h3>
@@ -94,7 +94,7 @@ export default function Home() {
           <div className="bg-white rounded-2xl shadow-lg flex flex-col items-center p-6 text-center border-2 border-[#FFF275] hover:shadow-2xl transition">
             <div className="w-full flex justify-center mb-4">
               <div className="bg-[#F8F8F8] rounded-xl p-4 flex items-center justify-center shadow-inner">
-                <Image src="/products/disney/belle.png" alt="Belle" width={160} height={160} className="object-contain" />
+                <Image src="/products/disney/belle-1.png" alt="Belle" width={160} height={160} className="object-contain" />
               </div>
             </div>
             <h3 className="font-luckiest-guy text-2xl text-[#3B5FFF] mb-1">Belle</h3>
@@ -111,7 +111,7 @@ export default function Home() {
       {/* Over Chonkies */}
       <section className="bg-[#FFF275] py-16 px-4">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10">
-          <Image src="/images/terrifier.png" alt="Over Chonkies" width={200} height={200} className="mb-6 md:mb-0" />
+          <Image src="/images/art-the-clown-bloody-1.png" alt="Over Chonkies" width={200} height={200} className="mb-6 md:mb-0" />
           <div>
             <h2 className="text-2xl font-luckiest-guy text-[#FF5CA2] mb-2">Over Chonkies</h2>
             <p className="text-[#3B5FFF] font-poppins mb-4">

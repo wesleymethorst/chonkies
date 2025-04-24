@@ -18,6 +18,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           currency: "eur",
           product_data: { 
             name: item.display_name,
+            images: [
+              `https://chonkies.vercel.app/png/products/${item.category.toLowerCase()}/${item.name}-1.png`
+            ]
           },
           unit_amount: Math.round(item.price * 100),
         },
