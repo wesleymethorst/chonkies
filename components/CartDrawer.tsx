@@ -101,11 +101,11 @@ const CartDrawer: React.FC<Props> = ({ open, onClose }) => {
                   <li key={item.id} className="flex items-center gap-3 bg-[#F8F8F8] rounded-lg p-3 shadow-sm">
                     <img
                       src={getImage(item)}
-                      alt={item.display_name || item.name}
+                      alt={("display_name" in item ? (item as any).display_name : item.name)}
                       className="w-14 h-14 object-contain rounded"
                     />
                     <div className="flex-1 text-left">
-                      <div className="font-semibold text-[#3B5FFF]">{item.display_name || item.name}</div>
+                      <div className="font-semibold text-[#3B5FFF]">{("display_name" in item ? (item as any).display_name : item.name)}</div>
                       <div className="text-xs text-gray-500 mb-1">
                         €{Number(item.price).toFixed(2)} per stuk
                       </div>
