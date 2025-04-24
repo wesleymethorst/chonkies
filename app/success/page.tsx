@@ -40,11 +40,11 @@ export default function Success() {
                 <li key={item.id} className="flex items-center gap-3 py-2">
                   <img
                     src={getImage(item)}
-                    alt={item.display_name || item.name}
+                    alt={("display_name" in item ? (item as any).display_name : item.name)}
                     className="w-12 h-12 object-contain rounded"
                   />
                   <div className="flex-1">
-                    <span className="font-semibold">{item.display_name || item.name}</span>
+                    <span className="font-semibold">{("display_name" in item ? (item as any).display_name : item.name)}</span>
                     <span className="ml-2 text-sm text-gray-500">x{item.quantity}</span>
                   </div>
                   <span className="font-bold text-[#FF5CA2]">
