@@ -45,7 +45,7 @@ const Header: React.FC = () => {
         <nav className="space-x-8 font-semibold hidden md:flex items-center ml-2">
           <div className="relative" ref={catRef}>
             <button
-              className={`hover:underline flex items-center gap-1 ${pathname.startsWith("/shop") ? "underline" : ""}`}
+              className={`hover:underline flex items-center gap-1 ${pathname && pathname.startsWith("/shop") ? "underline" : ""}`}
               type="button"
               onClick={() => setShowCat((v) => !v)}
             >
@@ -72,8 +72,8 @@ const Header: React.FC = () => {
               </div>
             )}
           </div>
-          <Link href="/about" className={`hover:underline ${pathname.startsWith("/about") ? "underline" : ""}`}>Over ons</Link>
-          <Link href="/sale" className={`hover:underline ${pathname.startsWith("/sale") ? "underline" : ""}`}>Uitverkoop</Link>
+          <Link href="/about" className={`hover:underline ${pathname && pathname.startsWith("/about") ? "underline" : ""}`}>Over ons</Link>
+          <Link href="/sale" className={`hover:underline ${pathname && pathname.startsWith("/sale") ? "underline" : ""}`}>Uitverkoop</Link>
         </nav>
       </div>
       <div className="flex items-center gap-4">
