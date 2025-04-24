@@ -4,8 +4,7 @@ import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { Product } from "@/data/products";
-
+import type { Product } from "@/types/Product";
 
 export default function ProductPage() {
   const params = useParams();
