@@ -19,7 +19,7 @@ const Header: React.FC = () => {
     fetch("/api/products")
       .then((r) => r.json())
       .then((data) => {
-        const unique = Array.from(new Set(data.map((p: any) => p.category)));
+        const unique = Array.from(new Set(data.map((p: any) => p.category))) as string[];
         setCategories(unique);
       });
   }, []);
