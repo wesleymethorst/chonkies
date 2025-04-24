@@ -218,7 +218,7 @@ export default function Shop() {
                 <div className="flex gap-3 mt-auto">
                   <button
                     className="bg-[#3B5FFF] hover:bg-[#2e4ce6] text-white font-poppins font-bold py-2 px-4 rounded-lg transition-all shadow"
-                    onClick={() => addToCart({ ...product, quantity: 1 })}
+                    onClick={() => addToCart({ ...product, id: String(product.id), quantity: 1 })}
                   >
                     Voeg toe aan winkelwagen
                   </button>
