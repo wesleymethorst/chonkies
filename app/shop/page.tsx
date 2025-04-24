@@ -44,8 +44,8 @@ export default function Shop() {
   ];
 
   // Filter op categorie uit querystring
-  const selectedCategory = searchParams.get("category") || "Alles";
-  const sort = searchParams.get("sort") || "naam-asc";
+  const selectedCategory = searchParams?.get("category") || "Alles";
+  const sort = searchParams?.get("sort") || "naam-asc";
 
   let filteredProducts = products;
   if (selectedCategory !== "Alles") {
