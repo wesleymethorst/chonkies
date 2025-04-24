@@ -123,7 +123,7 @@ export default function ProductPage() {
           <div className="flex items-center gap-4 mb-8">
             <button
               className="bg-[#3B5FFF] hover:bg-[#2e4ce6] text-white font-poppins font-bold py-3 px-8 rounded-lg transition-all shadow text-lg"
-              onClick={() => addToCart({ ...product, quantity: 1 })}
+              onClick={() => addToCart({ ...product, id: String(product.id), quantity: 1 })}
             >
               Voeg toe aan winkelwagen
             </button>
