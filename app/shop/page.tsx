@@ -2,11 +2,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import type { Product } from "@/types/Product";
 import { useSearchParams, useRouter } from "next/navigation";
 
-export default function Shop() {
+function ShopContent() {
   const { addToCart } = useCart();
   const [hovered, setHovered] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -238,5 +238,13 @@ export default function Shop() {
         )}
       </section>
     </main>
+  );
+}
+
+export default function Shop() {
+  return (
+    <Suspense fallback={<div className="text-center py-10">Laden...</div>}>
+      <ShopContent />
+    </Suspense>
   );
 }
