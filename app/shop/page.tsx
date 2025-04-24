@@ -65,13 +65,13 @@ export default function Shop() {
 
   // Handler voor sorteren
   function handleSortChange(val: string) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() || "");
     params.set("sort", val);
     router.push(`/shop?${params.toString()}`);
     setShowSort(false);
   }
   function handleCategoryChange(val: string) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() || "");
     if (val === "Alles") {
       params.delete("category");
     } else {
