@@ -111,7 +111,7 @@ export default function Home() {
       {/* Over Chonkies */}
       <section className="bg-[#FFF275] py-16 px-4">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10">
-          <Image src="/images/art-the-clown-bloody-1.png" alt="Over Chonkies" width={200} height={200} className="mb-6 md:mb-0" />
+          <Image src="/products/horror/art-the-clown-bloody-1.png" alt="Over Chonkies" width={200} height={200} className="mb-6 md:mb-0" />
           <div>
             <h2 className="text-2xl font-luckiest-guy text-[#FF5CA2] mb-2">Over Chonkies</h2>
             <p className="text-[#3B5FFF] font-poppins mb-4">
