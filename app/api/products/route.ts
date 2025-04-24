@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
-import { Product } from "@/data/products";
 
 // GET: alle producten ophalen
 export async function GET() {
