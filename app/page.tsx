@@ -16,7 +16,7 @@ export default function Home() {
         {/* Shop Chonkies */}
         <div className="bg-white rounded-xl shadow-md flex flex-col items-center p-6 text-center">
           <h2 className="text-[#3B5FFF] font-luckiest-guy text-2xl mb-4">SHOP CHONKIES</h2>
-          <Image src="/images/stitch.png" alt="Shop Chonkies" width={200} height={200} />
+          <Image src="/images/captainamerica.png" alt="Shop Chonkies" width={200} height={200} />
           <button className="mt-6 bg-[#3B5FFF] hover:bg-[#2e4ce6] text-white font-poppins font-bold py-2 px-4 rounded-lg">
             SHOP NU
           </button>
@@ -25,7 +25,7 @@ export default function Home() {
         {/* Over Chonkies */}
         <div className="bg-white rounded-xl shadow-md flex flex-col items-center p-6 text-center">
           <h2 className="text-[#1E1E1E] font-luckiest-guy text-2xl mb-4">OVER CHONKIES</h2>
-          <Image src="/images/moonknight.png" alt="Over Chonkies" width={200} height={200} />
+          <Image src="/images/terrifier.png" alt="Over Chonkies" width={200} height={200} />
           <button className="mt-6 bg-[#1E1E1E] hover:bg-[#333] text-white font-poppins font-bold py-2 px-4 rounded-lg">
             LEES MEER
           </button>
@@ -34,7 +34,7 @@ export default function Home() {
         {/* Uitverkoop */}
         <div className="bg-white rounded-xl shadow-md flex flex-col items-center p-6 text-center">
           <h2 className="text-[#FF5CA2] font-luckiest-guy text-2xl mb-4">UITVERKOOP</h2>
-          <Image src="/images/yubaba.png" alt="Uitverkoop" width={200} height={200} />
+          <Image src="/images/belle.png" alt="Uitverkoop" width={200} height={200} />
           <button className="mt-6 bg-[#FF5CA2] hover:bg-[#e94b91] text-white font-poppins font-bold py-2 px-4 rounded-lg">
             SCOOR DEALS
           </button>

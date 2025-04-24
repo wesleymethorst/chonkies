@@ -45,7 +45,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${luckiestGuy.variable} ${poppins.variable} antialiased`}
       >
-        <Header title="Chonkies" />
+        <Header />
         {children}
         <Footer />
       </body>
