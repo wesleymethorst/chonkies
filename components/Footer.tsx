@@ -2,6 +2,25 @@ import Image from "next/image";
 
 const Footer = () => (
   <footer className="bg-white border-t border-gray-200 dark:border-gray-700 font-poppins">
+    {/* Nieuwsbrief */}
+    <div className="bg-[#3B5FFF] py-10 text-center">
+      <h2 className="text-2xl font-luckiest-guy text-[#FFF275] mb-4">Word lid van de Chonkies familie!</h2>
+      <p className="text-white font-poppins mb-6">Schrijf je in voor onze nieuwsbrief en ontvang 10% korting op je eerste bestelling.</p>
+      <form className="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-lg mx-auto">
+        <input
+          type="email"
+          placeholder="Jouw e-mailadres"
+          className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none"
+        />
+        <button
+          type="submit"
+          className="bg-[#FF5CA2] hover:bg-[#e94b91] text-white font-bold px-6 py-2 rounded-lg transition"
+        >
+          Aanmelden
+        </button>
+      </form>
+    </div>
+
     {/* Top Bar */}
     <div className="bg-[#3B5FFF] flex justify-between items-center px-6 py-4">
       <div className="text-[#FF5CA2] font-extrabold text-2xl font-luckiest-guy">CHONKIES</div>
