@@ -281,7 +281,7 @@ function SaleContent() {
                     Voeg toe aan winkelwagen
                   </button>
                   <Link
-                    href={`/shop/${product.id}`}
+                    href={`/sale/${product.id}`}
                     className="bg-[#FFF275] hover:bg-[#ffe95c] text-[#FF5CA2] font-poppins font-bold py-2 px-4 rounded-lg transition-all shadow border border-[#FF5CA2]"
                   >
                     Bekijk product
