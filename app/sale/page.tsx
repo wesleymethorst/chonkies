@@ -39,11 +39,17 @@ function SaleContent() {
       const data = await res.json();
       // Alleen producten met geldige sale_price
       const filtered = data.filter(
-        (product: Product) =>
-          product.sale_price !== null &&
-          product.sale_price !== "null" &&
-          product.sale_price !== undefined &&
-          product.sale_price !== ""
+        (product: Product) => {
+          // Accept if sale_price is a number and not null/undefined
+          if (typeof product.sale_price === "number") {
+            return product.sale_price !== null && product.sale_price !== undefined;
+          }
+          // Accept if sale_price is a string and not "null" or empty
+          if (typeof product.sale_price === "string") {
+            return product.sale_price !== "null" && product.sale_price !== "";
+          }
+          return false;
+        }
       );
       setProducts(filtered);
       const elapsed = Date.now() - start;
