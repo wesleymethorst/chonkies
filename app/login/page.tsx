@@ -72,7 +72,7 @@ export default function LoginPage() {
           <div className="flex-1 h-px bg-gray-200" />
         </div>
         <button
-          onClick={() => signIn("google")}
+          onClick={() => signIn("google", { callbackUrl: "/" })}
           className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg py-2 font-semibold hover:bg-gray-50 transition"
         >
           <Image src={googleLogo} alt="Google logo" width={20} height={20} />

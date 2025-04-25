@@ -179,7 +179,7 @@ const Header: React.FC = () => {
           </div>
         ) : (
           <button
-            onClick={() => signIn("google")}
+            onClick={() => router.push("/login")}
             className="relative"
             aria-label="Login/Register"
           >
