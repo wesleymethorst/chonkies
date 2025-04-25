@@ -144,7 +144,13 @@ export default function ProductPage() {
                 className="bg-white rounded-2xl p-6 shadow-xl flex items-center justify-center w-full max-w-md min-h-[260px] border"
                 style={{
                   borderColor:
-                    product.sale_price && product.sale_price !== "null" && product.sale_price !== ""
+                    (
+                      typeof product.sale_price === "number"
+                        ? product.sale_price !== null && product.sale_price !== undefined
+                        : typeof product.sale_price === "string"
+                          ? product.sale_price !== "null" && product.sale_price !== ""
+                          : false
+                    )
                       ? "#FF5CA2"
                       : "#FFF275",
                 }}
