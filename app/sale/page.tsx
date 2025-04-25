@@ -6,11 +6,12 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import type { Product } from "@/types/Product";
 
 function SaleContent() {
   const { addToCart } = useCart();
   const [hovered, setHovered] = useState<string | null>(null);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -38,7 +39,7 @@ function SaleContent() {
       const data = await res.json();
       // Alleen producten met geldige sale_price
       const filtered = data.filter(
-        (product) =>
+        (product: Product) =>
           product.sale_price !== null &&
           product.sale_price !== "null" &&
           product.sale_price !== undefined &&
