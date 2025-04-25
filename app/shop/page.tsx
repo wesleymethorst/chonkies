@@ -40,13 +40,20 @@ function ShopContent() {
       // Filter: alleen producten die NIET in de sale zijn
       const filtered = data.filter(
         (product: Product) => {
-          // Accept if sale_price is null or undefined (number type)
-          if (typeof product.sale_price === "number") {
-            return product.sale_price === null || product.sale_price === undefined;
+          // Toon producten als sale_price niet bestaat of leeg/"null"
+          if (
+            product.sale_price === null ||
+            product.sale_price === undefined ||
+            product.sale_price === "" ||
+            product.sale_price === "null"
+          ) {
+            return true;
           }
-          // Accept if sale_price is a string and is "null" or empty
-          if (typeof product.sale_price === "string") {
-            return product.sale_price === "null" || product.sale_price === "";
+          // Ook als sale_price 0 (of 0.0) is, tonen (optioneel, afhankelijk van je data)
+          if (
+            (typeof product.sale_price === "number" && Number(product.sale_price) === 0)
+          ) {
+            return true;
           }
           return false;
         }
