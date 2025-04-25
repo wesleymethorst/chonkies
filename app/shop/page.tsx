@@ -39,7 +39,7 @@ function ShopContent() {
       const data = await res.json();
       // Filter: alleen producten die NIET in de sale zijn
       const filtered = data.filter(
-        (product) =>
+        (product: Product) =>
           product.sale_price === null ||
           product.sale_price === "null" ||
           product.sale_price === undefined ||
