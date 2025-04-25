@@ -215,7 +215,20 @@ function SaleContent() {
           {filteredProducts.map((product) => {
             const img1 = `/products/${product.category.toLowerCase()}/${product.name}-1.png`;
             const img2 = `/products/${product.category.toLowerCase()}/${product.name}-2.png`;
-            const salePrice = product.sale_price && product.sale_price !== "null" && product.sale_price !== "" ? Number(product.sale_price) : null;
+            let salePrice: number | null = null;
+            if (
+              typeof product.sale_price === "number" &&
+              product.sale_price !== null &&
+              product.sale_price !== undefined
+            ) {
+              salePrice = product.sale_price;
+            } else if (
+              typeof product.sale_price === "string" &&
+              product.sale_price !== "null" &&
+              product.sale_price !== ""
+            ) {
+              salePrice = Number(product.sale_price);
+            }
             const price = Number(product.price);
             return (
               <div
