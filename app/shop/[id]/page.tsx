@@ -133,7 +133,14 @@ export default function ProductPage() {
               <span className="uppercase text-xs font-bold text-[#3B5FFF] mb-2 tracking-widest">{product.category}</span>
               <h1 className="font-luckiest-guy text-4xl sm:text-5xl text-[#3B5FFF] mb-3">{product.display_name}</h1>
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-[#FF5CA2] font-bold text-3xl">€{Number(product.price).toFixed(2)}</span>
+                {product.sale_price && product.sale_price !== "null" && product.sale_price !== "" ? (
+                  <>
+                    <span className="text-[#FF5CA2] font-bold text-3xl">€{Number(product.sale_price).toFixed(2)}</span>
+                    <span className="line-through text-gray-400 text-xl ml-2">€{Number(product.price).toFixed(2)}</span>
+                  </>
+                ) : (
+                  <span className="text-[#FF5CA2] font-bold text-3xl">€{Number(product.price).toFixed(2)}</span>
+                )}
               </div>
               <div className="mb-6">
                 <p className="text-gray-700 text-lg leading-relaxed">{product.description}</p>

@@ -37,7 +37,15 @@ function ShopContent() {
       const start = Date.now();
       const res = await fetch("/api/products");
       const data = await res.json();
-      setProducts(data);
+      // Filter: alleen producten die NIET in de sale zijn
+      const filtered = data.filter(
+        (product) =>
+          product.sale_price === null ||
+          product.sale_price === "null" ||
+          product.sale_price === undefined ||
+          product.sale_price === ""
+      );
+      setProducts(filtered);
       const elapsed = Date.now() - start;
       const minDelay = 2000; // 2 seconden
       if (elapsed < minDelay) {
@@ -235,7 +243,7 @@ function ShopContent() {
                 </div>
                 <h2 className="font-luckiest-guy text-2xl text-[#3B5FFF] mb-1">{product.display_name}</h2>
                 <p className="text-gray-600 text-sm mb-2">{product.description}</p>
-                <div className="text-[#FF5CA2] font-bold text-xl mb-4">
+                <div className="text-[#FF5CA2] font-bold text-2xl">
                   €{Number(product.price).toFixed(2)}
                 </div>
                 <div className="flex gap-3 mt-auto">
