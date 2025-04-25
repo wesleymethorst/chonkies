@@ -15,6 +15,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImg, setSelectedImg] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -89,18 +90,24 @@ export default function ProductPage() {
               <li className="text-[#FF5CA2] font-semibold truncate max-w-[120px]">{product.display_name}</li>
             </ol>
           </nav>
-          <div className="max-w-6xl w-full mx-auto flex flex-col md:flex-row gap-10 md:gap-16 bg-white/90 rounded-3xl shadow-2xl border-2 border-[#FFF275] p-6 md:p-12">
+          <div className={`max-w-6xl w-full mx-auto flex flex-col md:flex-row gap-10 md:gap-16 bg-white/90 rounded-3xl shadow-2xl border-2 ${product.sale_price && product.sale_price !== "null" && product.sale_price !== "" ? "border-[#FF5CA2]" : "border-[#FFF275]"} p-6 md:p-12`}>
             {/* Sidebar met thumbnails */}
             <div className="flex flex-row md:flex-col gap-3 md:gap-4 items-center md:items-start order-2 md:order-1 mt-4 md:mt-0">
               {images.map((img, idx) => (
                 <button
                   key={img}
                   type="button"
-                  className={`bg-[#F8F8F8] rounded-lg p-1 border transition ${
-                    selectedImg === idx
-                      ? "border-[#FF5CA2] ring-2 ring-[#FF5CA2]"
-                      : "border-[#FFF275] hover:border-[#FF5CA2]"
-                  }`}
+                  className={`bg-[#F8F8F8] rounded-lg p-1 border transition
+                    ${
+                      product.sale_price && product.sale_price !== "null" && product.sale_price !== ""
+                        ? selectedImg === idx
+                          ? "border-[#3B5FFF] ring-2 ring-[#3B5FFF]"
+                          : "border-[#FF5CA2] hover:border-[#3B5FFF]"
+                        : selectedImg === idx
+                          ? "border-[#3B5FFF] ring-2 ring-[#3B5FFF]"
+                          : "border-[#FFF275] hover:border-[#3B5FFF]"
+                    }
+                  `}
                   onClick={() => setSelectedImg(idx)}
                   aria-label={`Bekijk afbeelding ${idx + 1}`}
                   style={{ width: 56, height: 56 }}
@@ -117,13 +124,21 @@ export default function ProductPage() {
             </div>
             {/* Grote afbeelding */}
             <div className="flex-1 flex items-center justify-center order-1 md:order-2">
-              <div className="bg-white rounded-2xl p-6 shadow-xl flex items-center justify-center w-full max-w-md min-h-[260px] border border-[#FFF275]">
+              <div
+                className="bg-white rounded-2xl p-6 shadow-xl flex items-center justify-center w-full max-w-md min-h-[260px] border"
+                style={{
+                  borderColor:
+                    product.sale_price && product.sale_price !== "null" && product.sale_price !== ""
+                      ? "#FF5CA2"
+                      : "#FFF275",
+                }}
+              >
                 <Image
                   src={images[selectedImg]}
                   alt={product.display_name}
                   width={260}
                   height={260}
-                  className="object-contain drop-shadow-xl"
+                  className="object-contain drop-shadow-xl transition-opacity duration-300"
                   priority
                 />
               </div>
@@ -133,14 +148,7 @@ export default function ProductPage() {
               <span className="uppercase text-xs font-bold text-[#3B5FFF] mb-2 tracking-widest">{product.category}</span>
               <h1 className="font-luckiest-guy text-4xl sm:text-5xl text-[#3B5FFF] mb-3">{product.display_name}</h1>
               <div className="flex items-center gap-3 mb-4">
-                {product.sale_price && product.sale_price !== "null" && product.sale_price !== "" ? (
-                  <>
-                    <span className="text-[#FF5CA2] font-bold text-3xl">€{Number(product.sale_price).toFixed(2)}</span>
-                    <span className="line-through text-gray-400 text-xl ml-2">€{Number(product.price).toFixed(2)}</span>
-                  </>
-                ) : (
-                  <span className="text-[#FF5CA2] font-bold text-3xl">€{Number(product.price).toFixed(2)}</span>
-                )}
+                <span className="text-[#FF5CA2] font-bold text-3xl">€{Number(product.price).toFixed(2)}</span>
               </div>
               <div className="mb-6">
                 <p className="text-gray-700 text-lg leading-relaxed">{product.description}</p>

@@ -225,7 +225,7 @@ function SaleContent() {
                       width={160}
                       height={160}
                       className={`object-contain absolute inset-0 transition-opacity duration-300 ${
-                        hovered === product.id ? "opacity-0" : "opacity-100"
+                        hovered === String(product.id) ? "opacity-0" : "opacity-100"
                       }`}
                       draggable={false}
                     />
@@ -235,7 +235,7 @@ function SaleContent() {
                       width={160}
                       height={160}
                       className={`object-contain absolute inset-0 transition-opacity duration-300 ${
-                        hovered === product.id ? "opacity-100" : "opacity-0"
+                        hovered === String(product.id) ? "opacity-100" : "opacity-0"
                       }`}
                       draggable={false}
                     />
