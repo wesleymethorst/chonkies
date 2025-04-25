@@ -5,11 +5,14 @@ import { useCart } from "@/components/CartContext";
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import type { Product } from "@/types/Product";
 import { useSearchParams, useRouter } from "next/navigation";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 function ShopContent() {
   const { addToCart } = useCart();
   const [hovered, setHovered] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -29,12 +32,21 @@ function ShopContent() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((r) => r.json())
-      .then((data) => {
-        console.log("Producten uit database:", data);
-        setProducts(data);
-      });
+    setLoading(true);
+    const fetchProducts = async () => {
+      const start = Date.now();
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      setProducts(data);
+      const elapsed = Date.now() - start;
+      const minDelay = 2000; // 2 seconden
+      if (elapsed < minDelay) {
+        setTimeout(() => setLoading(false), minDelay - elapsed);
+      } else {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
   }, []);
 
   // Categorieën ophalen voor bovenaan de shop pagina
@@ -90,6 +102,17 @@ function ShopContent() {
       name: selectedCategory,
       href: `/shop?category=${encodeURIComponent(selectedCategory)}`,
     });
+  }
+
+  if (loading) {
+    return (
+      <main className="bg-[#F8F8F8] flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#FF5CA2] border-t-transparent rounded-full animate-spin" />
+          <span className="text-[#3B5FFF] font-bold">Producten worden geladen...</span>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -243,8 +266,21 @@ function ShopContent() {
 
 export default function Shop() {
   return (
-    <Suspense fallback={<div className="text-center py-10">Laden...</div>}>
-      <ShopContent />
-    </Suspense>
+    <main className="bg-[#F8F8F8] min-h-screen flex flex-col">
+      <Header />
+      <Suspense
+        fallback={
+          <main className="bg-[#F8F8F8] flex flex-col items-center justify-center min-h-[60vh]">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-12 h-12 border-4 border-[#FF5CA2] border-t-transparent rounded-full animate-spin" />
+              <span className="text-[#3B5FFF] font-bold">Producten worden geladen...</span>
+            </div>
+          </main>
+        }
+      >
+        <ShopContent />
+      </Suspense>
+      <Footer />
+    </main>
   );
 }

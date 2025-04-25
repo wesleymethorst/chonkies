@@ -1,10 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <>
+    <main className="bg-[#F8F8F8] min-h-screen flex flex-col">
+      <Header />
       {/* Hero sectie */}
       <section className="bg-[#FFF275] flex flex-col items-center justify-center text-center px-4 py-16">
         <h1 className="text-4xl sm:text-6xl font-luckiest-guy text-[#FF5CA2] leading-tight mb-4">
@@ -125,6 +127,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </>
+      <Footer />
+    </main>
   );
 }

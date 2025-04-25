@@ -11,7 +11,7 @@ const Footer = () => {
   }
 
   return (
-    <footer className="bg-white border-t border-gray-200 dark:border-gray-700 font-poppins mt-12">
+    <footer className="bg-white border-t border-gray-200 dark:border-gray-700 font-poppins">
       {/* Nieuwsbrief */}
       <div className="bg-[#3B5FFF] py-10 text-center relative overflow-hidden">
         {/* Sierlijke achtergrond */}
