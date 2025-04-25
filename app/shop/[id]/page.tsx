@@ -90,7 +90,17 @@ export default function ProductPage() {
               <li className="text-[#FF5CA2] font-semibold truncate max-w-[120px]">{product.display_name}</li>
             </ol>
           </nav>
-          <div className={`max-w-6xl w-full mx-auto flex flex-col md:flex-row gap-10 md:gap-16 bg-white/90 rounded-3xl shadow-2xl border-2 ${product.sale_price && product.sale_price !== "null" && product.sale_price !== "" ? "border-[#FF5CA2]" : "border-[#FFF275]"} p-6 md:p-12`}>
+          <div className={`max-w-6xl w-full mx-auto flex flex-col md:flex-row gap-10 md:gap-16 bg-white/90 rounded-3xl shadow-2xl border-2 ${
+            (
+              typeof product.sale_price === "number"
+                ? product.sale_price !== null && product.sale_price !== undefined
+                : typeof product.sale_price === "string"
+                  ? product.sale_price !== "null" && product.sale_price !== ""
+                  : false
+            )
+              ? "border-[#FF5CA2]"
+              : "border-[#FFF275]"
+          } p-6 md:p-12`}>
             {/* Sidebar met thumbnails */}
             <div className="flex flex-row md:flex-col gap-3 md:gap-4 items-center md:items-start order-2 md:order-1 mt-4 md:mt-0">
               {images.map((img, idx) => (
@@ -99,7 +109,13 @@ export default function ProductPage() {
                   type="button"
                   className={`bg-[#F8F8F8] rounded-lg p-1 border transition
                     ${
-                      product.sale_price && product.sale_price !== "null" && product.sale_price !== ""
+                      (
+                        typeof product.sale_price === "number"
+                          ? product.sale_price !== null && product.sale_price !== undefined
+                          : typeof product.sale_price === "string"
+                            ? product.sale_price !== "null" && product.sale_price !== ""
+                            : false
+                      )
                         ? selectedImg === idx
                           ? "border-[#3B5FFF] ring-2 ring-[#3B5FFF]"
                           : "border-[#FF5CA2] hover:border-[#3B5FFF]"
