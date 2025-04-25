@@ -5,4 +5,5 @@ export type Product = {
   category: string;
   price: number;
   description: string;
+  sale_price: number;
 };
