@@ -43,15 +43,19 @@ function ShopContent() {
           // Toon producten als sale_price niet bestaat of leeg/"null"
           if (
             product.sale_price === null ||
-            product.sale_price === undefined ||
-            product.sale_price === "" ||
-            product.sale_price === "null"
+            product.sale_price === undefined
+          ) {
+            return true;
+          }
+          if (
+            typeof product.sale_price === "string" &&
+            (product.sale_price === "" || product.sale_price === "null")
           ) {
             return true;
           }
           // Ook als sale_price 0 (of 0.0) is, tonen (optioneel, afhankelijk van je data)
           if (
-            (typeof product.sale_price === "number" && Number(product.sale_price) === 0)
+            typeof product.sale_price === "number" && Number(product.sale_price) === 0
           ) {
             return true;
           }
