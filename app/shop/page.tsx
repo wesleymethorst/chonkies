@@ -39,11 +39,17 @@ function ShopContent() {
       const data = await res.json();
       // Filter: alleen producten die NIET in de sale zijn
       const filtered = data.filter(
-        (product: Product) =>
-          product.sale_price === null ||
-          product.sale_price === "null" ||
-          product.sale_price === undefined ||
-          product.sale_price === ""
+        (product: Product) => {
+          // Accept if sale_price is null or undefined (number type)
+          if (typeof product.sale_price === "number") {
+            return product.sale_price === null || product.sale_price === undefined;
+          }
+          // Accept if sale_price is a string and is "null" or empty
+          if (typeof product.sale_price === "string") {
+            return product.sale_price === "null" || product.sale_price === "";
+          }
+          return false;
+        }
       );
       setProducts(filtered);
       const elapsed = Date.now() - start;
