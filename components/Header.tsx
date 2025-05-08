@@ -3,12 +3,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import CartDrawer from './CartDrawer';
+import FavoritesDrawer from './FavoritesDrawer';
 import { useCart } from './CartContext';
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 
 const Header: React.FC = () => {
   const [cartOpen, setCartOpen] = useState(false);
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
   const { items } = useCart();
   const [showCat, setShowCat] = useState(false);
   const catRef = useRef<HTMLDivElement>(null);
@@ -111,7 +113,7 @@ const Header: React.FC = () => {
           type="button"
           className="relative"
           aria-label="Favorieten"
-          onClick={() => router.push("/404")}
+          onClick={() => setFavoritesOpen(true)}
         >
           <svg width="28px" height="28px" fill="none" viewBox="0 0 24 24">
             <path
@@ -194,6 +196,7 @@ const Header: React.FC = () => {
           </button>
         )}
         <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+        <FavoritesDrawer open={favoritesOpen} onClose={() => setFavoritesOpen(false)} />
       </div>
     </header>
   );

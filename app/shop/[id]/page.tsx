@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { useCart } from "@/components/CartContext";
+import { useFavorites } from "@/components/FavoritesContext";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import type { Product } from "@/types/Product";
@@ -12,6 +13,7 @@ export default function ProductPage() {
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const { addToCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImg, setSelectedImg] = useState(0);
   const [loading, setLoading] = useState(true);

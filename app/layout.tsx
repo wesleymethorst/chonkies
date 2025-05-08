@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Luckiest_Guy, Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "../components/Providers";
+import { FavoritesProvider } from "../components/FavoritesContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,10 +49,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${luckiestGuy.variable} ${poppins.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${luckiestGuy.variable} ${poppins.variable} font-sans bg-[#F8F8F8]`}
       >
         <Providers>
-          {children}
+          <FavoritesProvider>
+            {children}
+          </FavoritesProvider>
         </Providers>
       </body>
     </html>

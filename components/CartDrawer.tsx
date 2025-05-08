@@ -35,7 +35,9 @@ const CartDrawer: React.FC<Props> = ({ open, onClose }) => {
     const stripe = await stripePromise;
     if (!stripe) return;
 
-    const res = await fetch("/api/checkout", {
+    // Gebruik een env variable voor de backend URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+    const res = await fetch(`${apiUrl}/checkout`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ items }),

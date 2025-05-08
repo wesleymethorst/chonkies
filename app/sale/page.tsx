@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useCart } from "@/components/CartContext";
+import { useFavorites } from "@/components/FavoritesContext";
 import React, { useEffect, useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -10,6 +11,7 @@ import type { Product } from "@/types/Product";
 
 function SaleContent() {
   const { addToCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [hovered, setHovered] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -233,10 +235,33 @@ function SaleContent() {
             return (
               <div
                 key={product.id}
-                className="bg-white rounded-2xl shadow-lg flex flex-col items-center p-6 text-center border-2 border-[#FF5CA2] hover:shadow-2xl transition"
+                className="bg-white rounded-2xl shadow-lg flex flex-col items-center p-6 text-center border-2 border-[#FF5CA2] hover:shadow-2xl transition relative"
                 onMouseEnter={() => setHovered(String(product.id))}
                 onMouseLeave={() => setHovered(null)}
               >
+                {/* Favorieten hartje rechtsboven */}
+                <button
+                  className="absolute top-4 right-4 z-10"
+                  aria-label={isFavorite(String(product.id)) ? "Verwijder uit favorieten" : "Voeg toe aan favorieten"}
+                  onClick={() => toggleFavorite(String(product.id))}
+                  type="button"
+                >
+                  {/* Nieuw SVG hartje */}
+                  <svg
+                    width={28}
+                    height={28}
+                    fill={isFavorite(String(product.id)) ? "#FF5CA2" : "none"}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 21s-5.05-4.35-7.07-6.36C2.07 12.07 2 9.5 4.07 7.43c2.07-2.07 5.43-2.07 7.5 0 2.07-2.07 5.43-2.07 7.5 0 2.07 2.07 2 4.64-.86 7.21C17.05 16.65 12 21 12 21z"
+                      fill={isFavorite(String(product.id)) ? "#FF5CA2" : "none"}
+                      stroke="#FF5CA2"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
                 <div className="w-full flex justify-center mb-4">
                   <div className="bg-[#F8F8F8] rounded-xl p-4 flex items-center justify-center shadow-inner relative h-[160px] w-[160px]">
                     <Image
