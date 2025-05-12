@@ -32,19 +32,46 @@ const CartDrawer: React.FC<Props> = ({ open, onClose }) => {
 
   // Stripe checkout handler
   const handleCheckout = async () => {
-    const stripe = await stripePromise;
-    if (!stripe) return;
+    try {
+      const stripe = await stripePromise;
+      if (!stripe) {
+        console.error('Stripe failed to initialize');
+        return;
+      }
 
-    // Gebruik een env variable voor de backend URL
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
-    const res = await fetch(`${apiUrl}/checkout`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items }),
-    });
-    const data = await res.json();
-    if (data.sessionId) {
-      stripe.redirectToCheckout({ sessionId: data.sessionId });
+      console.log('Sending request to:', '/api/checkout');
+      console.log('With items:', items);
+
+      const response = await fetch('/api/checkout', {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ items }),
+      });
+
+      console.log('Response status:', response.status);
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}, body: ${responseText}`);
+      }
+
+      const data = JSON.parse(responseText);
+      
+      if (data.sessionId) {
+        console.log('Got session ID:', data.sessionId);
+        const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+        if (result.error) {
+          console.error('Stripe redirect error:', result.error);
+        }
+      } else {
+        console.error('No session ID received from API');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
     }
   };
 
